@@ -11,6 +11,10 @@ Project শুরু করার পর client-এর doc বা requirements �
 **Teacher's Project Requirements Link:**
 https://docs.google.com/document/d/1XRN18ClObPMJGKl7CfZFBLeZuJf2h8JOBc_crzuWtT4/edit?tab=t.0
 
+
+**আমার Project Requirements Link:**
+https://github.com/arifucoder/dev-starter-guides/blob/main/sdlc-docs/mern/project-workflow-assets/requirements-analysis.md
+
 ---
 
 ## ২. Mind Map (GitMind)
