@@ -69,8 +69,10 @@ const Note = model("Note", noteSchema);
 
 app.post("/create-note", async (req: Request, res: Response) => {
 	try {
+
+		// this is one process 
 		const { title, content, category, pinned, date, tags } = req.body;
-		const myNote = new Note({
+		const note = new Note({
 			title,
 			content,
 			category,
@@ -78,12 +80,15 @@ app.post("/create-note", async (req: Request, res: Response) => {
 			date,
 			tags,
 		});
+		await note.save();
 
-		await myNote.save();
+		// there is another way to save and best process
+		const body = req.body;
+		const note = await Note.create(body);
 
 		res.json({
 			success: true,
-			note: myNote,
+			note,
 		});
 	} catch (error: any) {
 		console.log(error.message);
