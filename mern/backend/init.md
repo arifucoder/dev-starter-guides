@@ -11,10 +11,28 @@ git init
 ```sh
 npx tsc --init
 ```
-`tsconfig.json`-এ:
+
+### ⚠️ NB: `tsconfig.json`-এ কিছু পরিবর্তন করতে হবে
+
+Folder structure অনুযায়ী relative import (যেমন `./app.js`, `../models/...`) ঠিকভাবে কাজ করানোর জন্য নিচের পরিবর্তনগুলো করতে হবে:
+
+```diff
+{
+- "module": "nodenext",
++ "module": "CommonJS",
+
++ "moduleResolution": "Node",
+
+- "verbatimModuleSyntax": true,
++ "verbatimModuleSyntax": false
+}
+```
+
+এছাড়া source আর build ফাইল আলাদা রাখার জন্য `tsconfig.json`-এ:
+
 ```json
 "rootDir": "./src",
-"outDir": "./dist",
+"outDir": "./dist"
 ```
 
 `src` ফোল্ডারের ভেতরে `server.ts` এবং `app.ts` বানাও।
@@ -22,6 +40,23 @@ npx tsc --init
 ## ৩. প্যাকেজ ইনস্টল
 ```sh
 npm install express dotenv
+npm install -D typescript tsx
+```
+
+### `package.json`-এ `dev` script যোগ করা
+
+`server.ts` file-টা সরাসরি চালানো এবং code change হলে auto-restart করার জন্য `package.json`-এ `scripts`-এর ভেতরে এটা যোগ করতে হবে:
+
+```json
+"scripts": {
+	"dev": "tsx watch src/server.ts"
+}
+```
+
+এরপর থেকে server চালানোর জন্য শুধু লিখলেই হবে:
+
+```sh
+npm run dev
 ```
 
 ## ৪. `app.ts` — সার্ভার তৈরি
