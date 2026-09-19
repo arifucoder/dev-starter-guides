@@ -88,3 +88,33 @@ userSchema.pre("save", async function () {
 ```
 
 এতে করে শুধু password নতুন করে সেট বা পরিবর্তন হলেই hashing চলবে, অন্যথায় আগের hash করা password-ই থেকে যাবে।
+
+
+---
+
+## Developer-রা যেসব কাজে বেশি Pre Hook ব্যবহার করে
+
+1. **Password hash করা** — user create/update করার আগে plain password-কে hash করে ফেলা (`pre("save")`)।
+2. **Slug তৈরি করা** — কোনো blog/product title থেকে save হওয়ার আগে automatic `slug` field বানিয়ে দেওয়া (যেমন `"Hello World"` → `"hello-world"`)।
+3. **Default/computed field বসানো** — save হওয়ার আগে কোনো field-এর মান নিজে থেকে হিসাব করে বসানো, যেমন `fullName = firstName + " " + lastName`।
+4. **Data sanitize/normalize করা** — save করার আগে email lowercase করা, extra space trim করা ইত্যাদি।
+5. **Duplicate/অবৈধ data আটকানো** — save হওয়ার আগে extra custom check চালিয়ে প্রয়োজনে error throw করা।
+
+---
+
+## Developer-রা যেসব কাজে বেশি Post Hook ব্যবহার করে
+
+1. **User delete করলে তার সাথে সাথে তার সব Notes delete করে দেওয়া** — (`post("findOneAndDelete")`)।
+2. **Order create হওয়ার পর confirmation email/SMS পাঠানো** — payment/order save হয়ে যাওয়ার পর notification পাঠানো।
+3. **Logging/Audit trail রাখা** — কোনো data create, update বা delete হওয়ার পর সেটার log আলাদা একটা collection-এ রেখে দেওয়া।
+4. **Cache/Counter update করা** — যেমন কোনো post like/comment হলে post-এর সাথে যুক্ত অন্য collection-এর count আপডেট করা।
+5. **Related collection clean-up করা** — কোনো main document delete হলে তার সাথে সম্পর্কিত (referenced) সব document ও data মুছে ফেলা (উপরের User–Notes example-টাই এর একটা বাস্তব example)।
+
+---
+
+## Middleware-এর ৪টা ধরন কোথায় বেশি ব্যবহার হয়
+
+1. **Document Middleware** → `save`-এর সময় password hash করা, বা `save`-এর আগে slug/fullName-এর মতো computed field বসানো।
+2. **Query Middleware** → user delete করলে (`findOneAndDelete`) তার সাথে সম্পর্কিত notes/orders delete করা, বা `find`-এর আগে soft-deleted (`isDeleted: true`) data বাদ দিয়ে query চালানো।
+3. **Aggregate Middleware** → aggregation চালানোর আগে বা পরে filter/log যোগ করা, যেমন সবসময় `status: "active"` data-ই aggregate-এ ধরা।
+4. **Model Middleware** → `insertMany()` দিয়ে একসাথে অনেক data insert করার আগে/পরে প্রতিটার উপর কোনো common validation বা transformation চালানো।
